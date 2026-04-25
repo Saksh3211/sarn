@@ -21,6 +21,7 @@ global g_tick: int = 0
 global g_err_msg: string = ""
 global g_font_id: int = -1
 
+
 function clr_bg(): int
     window.clear(14, 14, 22, 255)
     return 0
@@ -198,7 +199,7 @@ function write_worker(): int
     s = s .. "Set-P 63 'Checking Ninja...'\n"
     s = s .. "if(-not(Has-Cmd 'ninja')){$np=\"$VcpkgDir\\installed\\x64-windows\\tools\\ninja\";if(Test-Path \"$np\\ninja.exe\"){$env:PATH+=\";$np\";[System.Environment]::SetEnvironmentVariable('PATH',[System.Environment]::GetEnvironmentVariable('PATH','Machine')+\";$np\",'Machine')}}\n"
     s = s .. "Set-P 67 'Setting up Sarn repository...'\n"
-    s = s .. "if(Test-Path(Join-Path $InstallDir '.git')){Set-P 68 'Updating Sarn repository...';Push-Location $InstallDir;git pull 2>&1|Out-Null;Pop-Location}else{Set-P 68 'Cloning Sarn repository...';git clone 'https://github.com/Saksh3211/S-lua' $InstallDir 2>&1|Out-Null}\n"
+    s = s .. "if(Test-Path(Join-Path $InstallDir '.git')){Set-P 68 'Updating Sarn repository...';Push-Location $InstallDir;git pull 2>&1|Out-Null;Pop-Location}else{Set-P 68 'Cloning Sarn repository...';git clone 'https://github.com/Saksh3211/sarn-compiler' $InstallDir 2>&1|Out-Null}\n"
     s = s .. "Set-P 75 'Configuring CMake build...'\n"
     s = s .. "$llvmCmake=($llvmRoot -replace '\\\\','/')+'/lib/cmake/llvm'\n"
     s = s .. "$raylibCmake=\"$VcpkgDir/installed/x64-windows/share/raylib\"\n"
@@ -421,7 +422,7 @@ function draw_page_done(): int
     draw.text("Documentation: open docs.md in the install folder.", 50, 330, 13, 150, 170, 200, 255)
 
     draw.rect(50, 356, 560, 1, 38, 38, 56, 255)
-    draw.text("Sarn is open source: github.com/Saksh3211/S-lua", 50, 370, 12, 90, 110, 150, 255)
+    draw.text("Sarn is open source: github.com/Saksh3211/sarn-compiler", 50, 370, 12, 90, 110, 150, 255)
 
     draw_footer()
     ui.set_accent(50, 160, 80)
