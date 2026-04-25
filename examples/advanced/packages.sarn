@@ -1,0 +1,17 @@
+--!!type:strict
+import Sarn_pkg_TEST
+--[[
+this is how you can import a package ,
+but if you dont have it execute "$root\sarn.ps1 install Sarn_pkg_TEST"
+root means the compiler path. 
+you can make your own package easily even with c native code 
+]]
+
+function main(): int
+     print(Sarn_pkg_TEST.add(5, 7)) -- this will print 12
+     print(Sarn_pkg_TEST.mul(5, 7)) -- this will print 35
+     print(Sarn_pkg_TEST.sub(5, 7)) -- this will print -2
+     print(Sarn_pkg_TEST.div(5, 7)) -- this will print 0.714286
+     print(Sarn_pkg_TEST.pow(5, 7)) -- this will print 78125
+     return 0
+end

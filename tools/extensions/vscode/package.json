@@ -1,0 +1,452 @@
+{
+  "icon": "./icons/icon.png",
+  "readme": "./readme.md",
+  "name": "sarn-extension",
+  "displayName": "Sarn Language",
+  "description": "Syntax highlighting, diagnostics, auto-complete, hover docs, run button, custom icon, and fully customizable theme for Sarn.",
+  "version": "0.5.0",
+  "publisher": "Saksh3211",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Saksh3211/Sarn"
+  },
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Snippets",
+    "Themes"
+  ],
+  "keywords": [
+    "sarn",
+    "systems",
+    "llvm"
+  ],
+  "activationEvents": [
+    "onLanguage:sarn",
+    "workspaceContains:**/*.sarn"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "sarn",
+        "aliases": [
+          "Sarn",
+          "sarn"
+        ],
+        "extensions": [
+          ".sarn"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "dark": "./icons/sarn-file.svg",
+          "light": "./icons/sarn-file.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sarn",
+        "scopeName": "source.sarn",
+        "path": "./syntaxes/sarn.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "sarn",
+        "path": "./snippets/sarn.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "Sarn Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/sarn-dark.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "sarn-icons",
+        "label": "Sarn Icons",
+        "path": "./icon-theme/sarn-icons.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "sarn.runFile",
+        "title": "Run Sarn File",
+        "category": "Sarn",
+        "icon": "$(play)"
+      },
+      {
+        "command": "sarn.buildCompiler",
+        "title": "Build Compiler",
+        "category": "Sarn",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "sarn.compile",
+        "title": "Run Diagnostics",
+        "category": "Sarn"
+      },
+      {
+        "command": "sarn.emitAST",
+        "title": "Emit AST",
+        "category": "Sarn"
+      },
+      {
+        "command": "sarn.emitIR",
+        "title": "Emit LLVM IR",
+        "category": "Sarn"
+      },
+      {
+        "command": "sarn.customizeTheme",
+        "title": "Customize Theme Colors",
+        "category": "Sarn",
+        "icon": "$(symbol-color)"
+      },
+      {
+        "command": "sarn.resetTheme",
+        "title": "Reset Theme to Defaults",
+        "category": "Sarn"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "sarn.runFile",
+        "key": "f5",
+        "when": "resourceExtname == .sarn && !inDebugMode"
+      },
+      {
+        "command": "sarn.runFile",
+        "key": "ctrl+f5",
+        "when": "resourceExtname == .sarn"
+      },
+      {
+        "command": "sarn.compile",
+        "key": "f7",
+        "when": "resourceExtname == .sarn"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "sarn.runFile",
+          "when": "resourceExtname == .sarn",
+          "group": "navigation@1"
+        },
+        {
+          "command": "sarn.buildCompiler",
+          "when": "resourceExtname == .sarn",
+          "group": "navigation@2"
+        },
+        {
+          "command": "sarn.customizeTheme",
+          "when": "resourceExtname == .sarn",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "sarn.runFile",
+          "when": "resourceExtname == .sarn",
+          "group": "sarn@1"
+        },
+        {
+          "command": "sarn.compile",
+          "when": "resourceExtname == .sarn",
+          "group": "sarn@2"
+        },
+        {
+          "command": "sarn.customizeTheme",
+          "when": "resourceExtname == .sarn",
+          "group": "sarn@3"
+        },
+        {
+          "command": "sarn.emitAST",
+          "when": "resourceExtname == .sarn",
+          "group": "sarn@4"
+        },
+        {
+          "command": "sarn.emitIR",
+          "when": "resourceExtname == .sarn",
+          "group": "sarn@5"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Sarn",
+      "properties": {
+        "sarn.compilerPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to sarnc.exe. Leave empty to auto-detect at build/compiler/sarnc.exe."
+        },
+        "sarn.sarnRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Root of the Sarn project for calling sarn.ps1. Leave empty to use workspace root."
+        },
+        "sarn.lintOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run diagnostics when a .sarn file is saved."
+        },
+        "sarn.lintOnChange": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run diagnostics while typing."
+        },
+        "sarn.lintDelay": {
+          "type": "number",
+          "default": 700,
+          "minimum": 200,
+          "maximum": 5000,
+          "description": "Milliseconds after last keystroke before lint-on-change fires."
+        },
+        "sarn.theme.directives.color": {
+          "type": "string",
+          "default": "#f38ba8",
+          "description": "Color for --!! directives (e.g. --!!type:strict). Use a hex color like #f38ba8."
+        },
+        "sarn.theme.directives.fontStyle": {
+          "type": "string",
+          "default": "bold italic",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for --!! directives."
+        },
+        "sarn.theme.controlKeywords.color": {
+          "type": "string",
+          "default": "#cba6f7",
+          "description": "Color for control flow keywords: if then else for while do return break continue and or not."
+        },
+        "sarn.theme.controlKeywords.fontStyle": {
+          "type": "string",
+          "default": "bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for control flow keywords."
+        },
+        "sarn.theme.declKeywords.color": {
+          "type": "string",
+          "default": "#89b4fa",
+          "description": "Color for declaration keywords: local const global function type extern export import enum defer."
+        },
+        "sarn.theme.declKeywords.fontStyle": {
+          "type": "string",
+          "default": "bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for declaration keywords."
+        },
+        "sarn.theme.memoryKeywords.color": {
+          "type": "string",
+          "default": "#fab387",
+          "description": "Color for memory / system keywords: alloc free deref store cast panic typeof sizeof."
+        },
+        "sarn.theme.memoryKeywords.fontStyle": {
+          "type": "string",
+          "default": "bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for memory keywords."
+        },
+        "sarn.theme.types.color": {
+          "type": "string",
+          "default": "#89dceb",
+          "description": "Color for built-in type names: int number string bool void any ptr table etc."
+        },
+        "sarn.theme.types.fontStyle": {
+          "type": "string",
+          "default": "italic",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for built-in types."
+        },
+        "sarn.theme.constants.color": {
+          "type": "string",
+          "default": "#fab387",
+          "description": "Color for language constants: null true false."
+        },
+        "sarn.theme.constants.fontStyle": {
+          "type": "string",
+          "default": "bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for language constants."
+        },
+        "sarn.theme.modules.color": {
+          "type": "string",
+          "default": "#94e2d5",
+          "description": "Color for built-in module names: math io os string stdata window draw input ui font."
+        },
+        "sarn.theme.modules.fontStyle": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for module names."
+        },
+        "sarn.theme.functions.color": {
+          "type": "string",
+          "default": "#f9e2af",
+          "description": "Color for declared function names (in function declarations)."
+        },
+        "sarn.theme.functions.fontStyle": {
+          "type": "string",
+          "default": "bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for declared function names."
+        },
+        "sarn.theme.functionCalls.color": {
+          "type": "string",
+          "default": "#89b4fa",
+          "description": "Color for function call sites."
+        },
+        "sarn.theme.functionCalls.fontStyle": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for function call sites."
+        },
+        "sarn.theme.strings.color": {
+          "type": "string",
+          "default": "#a6e3a1",
+          "description": "Color for string literals."
+        },
+        "sarn.theme.strings.fontStyle": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for string literals."
+        },
+        "sarn.theme.numbers.color": {
+          "type": "string",
+          "default": "#fab387",
+          "description": "Color for numeric literals."
+        },
+        "sarn.theme.numbers.fontStyle": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for numeric literals."
+        },
+        "sarn.theme.comments.color": {
+          "type": "string",
+          "default": "#6c7086",
+          "description": "Color for comments (-- line comments and --[[ block comments]])."
+        },
+        "sarn.theme.comments.fontStyle": {
+          "type": "string",
+          "default": "italic",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for comments."
+        },
+        "sarn.theme.operators.color": {
+          "type": "string",
+          "default": "#f2cdcd",
+          "description": "Color for operators: == ~= <= >= .. -> & | etc."
+        },
+        "sarn.theme.operators.fontStyle": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for operators."
+        },
+        "sarn.theme.typeNames.color": {
+          "type": "string",
+          "default": "#89dceb",
+          "description": "Color for user-defined type names in method declarations (e.g. Vec2 in Vec2.length)."
+        },
+        "sarn.theme.typeNames.fontStyle": {
+          "type": "string",
+          "default": "italic bold",
+          "enum": [
+            "",
+            "bold",
+            "italic",
+            "bold italic",
+            "underline"
+          ],
+          "description": "Font style for user-defined type names."
+        }
+      }
+    }
+  }
+}
