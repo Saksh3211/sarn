@@ -1,9 +1,9 @@
-# S Lua - Getting Started Guide
+# Sarn - Getting Started Guide
 
 ## Installation & Setup
 
 ### Prerequisites
-- Windows, Linux, or macOS
+- Windows
 - LLVM/Clang compiler (for linking compiled code)
 - PowerShell (for running examples on Windows)
 
@@ -15,7 +15,7 @@ cd Sarn-compiler
 cmake -B build -G Ninja && ninja -C build  # Linux/macOS
 ```
 
-The compiler binary will be at `build/compiler/sluac.exe` (Windows) or `build/compiler/sluac` (Unix).
+The compiler binary will be at `build/compiler/sarnc.exe` (Windows)
 
 ---
 
@@ -27,7 +27,7 @@ Create `hello.sarn`:
 --!!type:strict
 
 function main(): int
-    print("Hello, S Lua!")
+    print("Hello, Sarn!")
     return 0
 end
 ```
@@ -39,16 +39,16 @@ end
 
 **Output:**
 ```
-Hello, S Lua!
+Hello, Sarn!
 ```
 
-That's it! You've written your first S Lua program.
+That's it! You've written your first Sarn program.
 
 ---
 
 ## Understanding the Directives
 
-Every S Lua file starts with directives (line 1+):
+Every Sarn file starts with directives (line 1+):
 
 ```lua
 --!!type:strict      # Enforce strict typing (or 'nonstrict')
@@ -355,6 +355,6 @@ sluac file.sarn --nonstrict         # Force nonstrict mode
 | Import | `import math` or `import ("file.sarn")` |
 | String Concat | `"hello" .. " " .. "world"` |
 
-Happy coding with S Lua!
+Happy coding with Sarn!
 
 

@@ -1,15 +1,15 @@
-# S Lua - Frequently Asked Questions
+# Sarn - Frequently Asked Questions
 
 ## General Questions
 
-### Q: What is S Lua?
-**A:** S Lua is a statically-typed, compiled systems programming language designed for performance-critical applications, game development, and systems work. It features static typing, memory control, and modern language constructs with direct LLVM compilation.
+### Q: What is Sarn?
+**A:** Sarn is a statically-typed, compiled systems programming language designed for performance-critical applications, game development, and systems work. It features static typing, memory control, and modern language constructs with direct LLVM compilation.
 
-### Q: Can I use S Lua for game development?
-**A:** Yes! S Lua includes built-in Raylib support for graphics, 3D rendering, and UI. See `graphics/` examples.
+### Q: Can I use Sarn for game development?
+**A:** Yes! Sarn includes built-in Raylib support for graphics, 3D rendering, and UI. See `graphics/` examples.
 
-### Q: Can I run S Lua code without compilation?
-**A:** Currently no - you must compile. There's no interpreter or REPL. Future versions may add this.
+### Q: Can I run Sarn code without compilation?
+**A:** Yes! Use the interactive REPL: `./sarn.ps1 sarn` (Windows) or run individual statements interactively. Or compile: Sarn is fully compiled for production use.
 
 ---
 
@@ -18,21 +18,21 @@
 ### Q: Where do I get the compiler?
 **A:** Build it yourself:
 ```bash
-cd Sarn-compiler
+cd sarn-compiler
 cmake -B build -G Ninja && ninja -C build
 ```
-The compiler will be at `build/compiler/sluac` (or `.exe` on Windows).
+The compiler will be at `build/compiler/Release/sarnc.exe` (Windows)
 
-### Q: What do I need to compile S Lua code?
+### Q: What do I need to compile Sarn code?
 **A:**
-- The S Lua compiler (sluac)
+- The Sarn compiler (sarnc)
 - LLVM/Clang toolchain (for linking)
 - Standard C library
 
-### Q: How do I run compiled S Lua code?
+### Q: How do I run compiled Sarn code?
 **A:** After compilation to `.ll` (LLVM IR), link with Clang:
 ```bash
-sluac hello.sarn -o hello.ll
+sarnc hello.sarn -o hello.ll
 clang hello.ll -o hello
 ./hello
 ```
@@ -204,7 +204,7 @@ Full multithreading requires C callbacks.
 
 ## Integration & Advanced
 
-### Q: Can I call C code from S Lua?
+### Q: Can I call C code from Sarn?
 **A:** Yes, use `extern function`:
 ```lua
 extern function strlen(s: string): int
@@ -215,11 +215,11 @@ function main(): int
 end
 ```
 
-### Q: Can I embed S Lua in a C program?
-**A:** The compiled S Lua code links as normal LLVM - you can call it from C by exporting the `main` function or other functions.
+### Q: Can I embed Sarn in a C program?
+**A:** The compiled Sarn code links as normal LLVM - you can call it from C by exporting the `main` function or other functions.
 
 ### Q: Can I use Raylib for graphics?
-**A:** Yes, S Lua has built-in Raylib support. See `graphics/demo_3d.sarn`.
+**A:** Yes, Sarn has built-in Raylib support. See `graphics/demo_3d.sarn`.
 
 ### Q: Can I create a shared library (.so / .dll)?
 **A:** Not directly yet. You can compile to `.ll` and link as needed.
@@ -241,7 +241,7 @@ end
 - Stack overflow - reduce recursion depth
 - Use debugger: `gdb ./program` or `lldb ./program`
 
-### Q: How do I debug my S Lua code?
+### Q: How do I debug my Sarn code?
 **A:** 
 1. Compile with debug info: Insert print statements
 2. Use a debugger on the compiled binary: `gdb`, `lldb`

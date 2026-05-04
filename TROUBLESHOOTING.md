@@ -1,4 +1,4 @@
-# S Lua Compiler - Troubleshooting Guide
+# Sarn Compiler - Troubleshooting Guide
 
 ## Quick Diagnostic Checklist
 

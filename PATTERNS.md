@@ -1,4 +1,4 @@
-# S Lua - Common Patterns & Best Practices
+# Sarn - Common Patterns & Best Practices
 
 ## Project Organization
 

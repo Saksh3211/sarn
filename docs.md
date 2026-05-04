@@ -1,8 +1,8 @@
-# S Lua Language Reference
+# Sarn Language Reference
 
 ## Learning Path & Examples
 
-S Lua examples are organized by increasing complexity:
+Sarn examples are organized by increasing complexity:
 
 **basics/** - Start here
 1. `variables.sarn` - Variable declaration, local/const/global
@@ -432,7 +432,7 @@ File imports inline all declarations from the target file before the current fil
 
 ### Using Built-in Packages
 
-S Lua provides built-in standard library packages that are imported by name:
+Sarn provides built-in standard library packages that are imported by name:
 ```lua
 import math
 import string
@@ -442,7 +442,7 @@ import json
 -- ... and many others
 ```
 
-These are compiled standard library modules provided by the S Lua runtime.
+These are compiled standard library modules provided by the Sarn runtime.
 
 ### Creating and Using Custom Packages (Modules)
 
@@ -483,13 +483,13 @@ end
 
 ### Package Registration
 
-The S Lua runtime uses a module registry system. Built-in packages are registered at startup and can be imported without file paths. External C modules can be registered programmatically to extend the runtime.
+The Sarn runtime uses a module registry system. Built-in packages are registered at startup and can be imported without file paths. External C modules can be registered programmatically to extend the runtime.
 
 ---
 
 ## OOP pattern
 
-S Lua uses a static dispatch OOP pattern — no vtables, no inheritance overhead.
+Sarn uses a static dispatch OOP pattern — no vtables, no inheritance overhead.
 ```lua
 -- define type
 type Animal = { name: string, sound: string, legs: int }
