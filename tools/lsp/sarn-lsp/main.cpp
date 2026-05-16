@@ -4,7 +4,7 @@
 
 std::string runCompiler(const std::string& file)
 {
-    std::string command = "build/compiler/sluac.exe " + file + " -o temp.ll 2>&1";
+    std::string command = "build/compiler/sarnc.exe " + file + " -o temp.ll 2>&1";
 
     char buffer[256];
     std::string result;
@@ -40,7 +40,7 @@ int main()
 
         if (line.find("didSave") != std::string::npos)
         {
-            std::string output = runCompiler("current.slua");
+            std::string output = runCompiler("current.sarn");
             std::cout << output << std::endl;
         }
     }

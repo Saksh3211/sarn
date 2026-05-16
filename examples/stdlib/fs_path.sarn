@@ -3,7 +3,7 @@ import fs
 import path
 
 function main(): int
-    fs.write("test_data.txt", "hello from slua")
+    fs.write("test_data.txt", "hello from sarn")
     
     local exists: int = fs.exists("test_data.txt")
     print(exists)

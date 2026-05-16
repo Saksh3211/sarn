@@ -12,7 +12,7 @@ function main(): int
     local crc: int = crypto.crc32("test", 4)
     print(crc)
     
-    local encoded: string = crypto.base64_encode("slua", 4)
+    local encoded: string = crypto.base64_encode("sarn", 4)
     print(encoded)
     
     local decoded: string = crypto.base64_decode(encoded)

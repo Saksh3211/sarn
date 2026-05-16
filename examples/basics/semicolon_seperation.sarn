@@ -1,1 +1,2 @@
---!!type:strict ; function main():int ;local x: int = 10; local y: int = 20; print(x + y); return 0;end
+--!!type:strict ; 
+function main():int local x: int = 10; local y: int = 20; print(x + y); return 0;end

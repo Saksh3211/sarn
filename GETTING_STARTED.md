@@ -312,12 +312,12 @@ Follow these examples in order:
 ### Compiler Flags
 
 ```bash
-sluac file.sarn                     # Compile to output.ll
-sluac file.sarn -o out.ll           # Specify output file
-sluac file.sarn --emit-ast          # Dump abstract syntax tree
-sluac file.sarn --emit-tokens       # Dump token stream
-sluac file.sarn --strict            # Force strict mode
-sluac file.sarn --nonstrict         # Force nonstrict mode
+sarnc file.sarn                     # Compile to output.ll
+sarnc file.sarn -o out.ll           # Specify output file
+sarnc file.sarn --emit-ast          # Dump abstract syntax tree
+sarnc file.sarn --emit-tokens       # Dump token stream
+sarnc file.sarn --strict            # Force strict mode
+sarnc file.sarn --nonstrict         # Force nonstrict mode
 ```
 
 ---

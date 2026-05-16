@@ -885,18 +885,18 @@ local ts: string = typeof(my_val)   -- runtime type string (nonstrict)
 
 ## Compiler CLI
 ```
-sluac file.sarn                     -- compile to output.ll
-sluac file.sarn -o out.ll           -- compile to specific path
-sluac file.sarn --emit-ast          -- dump AST
-sluac file.sarn --emit-tokens       -- dump token stream
-sluac file.sarn --strict            -- force strict mode
-sluac file.sarn --nonstrict         -- force nonstrict mode
+sarnc file.sarn                     -- compile to output.ll
+sarnc file.sarn -o out.ll           -- compile to specific path
+sarnc file.sarn --emit-ast          -- dump AST
+sarnc file.sarn --emit-tokens       -- dump token stream
+sarnc file.sarn --strict            -- force strict mode
+sarnc file.sarn --nonstrict         -- force nonstrict mode
 ```
 
 Compile + link:
 ```powershell
-sluac examples\hello.sarn -o bin\hello.ll
-clang bin\hello.ll build\runtime\slua.lib raylib.lib -o hello.exe
+sarnc examples\hello.sarn -o bin\hello.ll
+clang bin\hello.ll build\runtime\sarn.lib raylib.lib -o hello.exe
 .\hello.exe
 ```
 

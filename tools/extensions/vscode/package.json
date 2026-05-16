@@ -4,7 +4,7 @@
   "name": "sarn-extension",
   "displayName": "Sarn Language",
   "description": "Syntax highlighting, diagnostics, auto-complete, hover docs, run button, custom icon, and fully customizable theme for Sarn.",
-  "version": "0.5.0",
+  "version": "1.5.0",
   "publisher": "Saksh3211",
   "license": "MIT",
   "repository": {
@@ -189,7 +189,12 @@
         "sarn.sarnRoot": {
           "type": "string",
           "default": "",
-          "description": "Root of the Sarn project for calling sarn.ps1. Leave empty to use workspace root."
+          "description": "Root of the Sarn project for calling sarn.exe or anything. Leave empty to use workspace root."
+        },
+        "sarn.sarnExePath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to sarn.exe (the CLI driver). Leave empty to auto-detect sarn.exe in project root or PATH."
         },
         "sarn.lintOnSave": {
           "type": "boolean",

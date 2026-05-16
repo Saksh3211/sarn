@@ -516,7 +516,7 @@ end
 
 ### Emit AST for Complex Issues
 ```bash
-sluac problematic.sarn --emit-ast > ast.txt
+sarnc problematic.sarn --emit-ast > ast.txt
 ```
 Inspect the output to see how your code is being parsed.
 
@@ -532,7 +532,7 @@ gdb ./program
 
 ### Check Generated IR
 ```bash
-sluac slow_program.sarn -o output.ll
+sarnc slow_program.sarn -o output.ll
 # Review output.ll to see generated code
 ```
 

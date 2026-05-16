@@ -163,6 +163,22 @@ function getCompilerPath() {
     return 'sarnc.exe';
 }
 
+function getSarnExePath() {
+    const cfg = vscode.workspace.getConfiguration('sarn');
+    const val = cfg.get('sarnExePath', '').trim();
+    if (val) return val;
+    const folders = vscode.workspace.workspaceFolders;
+    if (folders) {
+        // check for PyInstaller build or plain .exe
+        for (const f of folders) {
+            for (const name of ['sarn.exe', 'dist\\sarn.exe']) {
+                const p = path.join(f.uri.fsPath, name);
+                try { fs.accessSync(p); return p; } catch {}
+            }
+        }
+    }
+    return 'sarn.exe';  // assume it's in PATH
+}
 function getProjectRoot() {
     const cfg = vscode.workspace.getConfiguration('sarn');
     const val = cfg.get('sarnRoot', '').trim();
@@ -716,13 +732,13 @@ function cmdRunFile() {
         return;
     }
     editor.document.save().then(() => {
-        const root = getProjectRoot();
-        const ps1  = path.join(root, 'sarn.ps1');
-        const rel  = path.relative(root, editor.document.uri.fsPath).replace(/\\/g, '/');
+        const root    = getProjectRoot();
+        const sarnExe = getSarnExePath();
+        const file    = editor.document.uri.fsPath;
         let t = vscode.window.terminals.find(x => x.name === 'Sarn');
-        if (!t) t = vscode.window.createTerminal({ name: 'Sarn', cwd:root, shellPath:'powershell.exe', shellArgs:['-ExecutionPolicy','Bypass'] });
+        if (!t) t = vscode.window.createTerminal({ name: 'Sarn', cwd: root });
         t.show(true);
-        t.sendText(`& "${ps1}" Sarn-Run "${rel}"`, true);
+        t.sendText(`& "${sarnExe}" run "${file}"`, true);
     });
 }
 

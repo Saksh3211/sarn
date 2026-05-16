@@ -1,6 +1,6 @@
 --!!type:nonstrict
 
-function main()
+function main():int
     local x = 42
     print(x)
     
