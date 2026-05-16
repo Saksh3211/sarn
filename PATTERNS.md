@@ -4,16 +4,18 @@
 
 ### Recommended Directory Structure
 ```
-my_project/
-  """"""""" src/
-  """   """"""""" main.sarn
-  """   """"""""" utils.sarn
-  """   """"""""" config.sarn
-  """   """"""""" types.sarn
-  """"""""" .packages/
-  """   """"""""" (packages)
-  """"""""" data/
-  """   """"""""" (config files, resources)
+Simple_project_structure/
+├── src/
+│   ├── main.sarn
+│   ├── utils.sarn
+│   ├── config.sarn
+│   └── types.sarn
+│
+├── .packages/
+│   └── (packages)
+│
+└── data/
+    └── (config files, resources)
 ```
 
 ### Module Organization Pattern
