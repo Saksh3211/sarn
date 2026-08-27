@@ -1,0 +1,9 @@
+--!!type:strict
+local Module = import math
+
+function main(): int
+    print(Module.pi())
+    print(Module.sin(1.0))
+    print( (Module.sin(1.0)^2) + (Module.cos(1.0)^2) )
+    return 0
+end

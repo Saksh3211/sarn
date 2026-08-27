@@ -1,0 +1,16 @@
+--!!type:strict
+--!!mem:man
+
+function main(): int
+    local source: ptr<int> = alloc_typed(int, 1)
+    store(source, 41)
+
+    local moved: ptr<int> = ptr_move(source)
+    local copied: ptr<int> = ptr_clone(moved)
+    print(deref(moved))
+    print(deref(copied))
+
+    free(moved)
+    free(copied)
+    return 0
+end

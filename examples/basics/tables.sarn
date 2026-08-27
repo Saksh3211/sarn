@@ -1,6 +1,6 @@
 --!!type:nonstrict
 
-function main()
+function main():int
     local nums = {10, 20, 30, 40, 50}
     
     print(nums[0])
@@ -9,7 +9,7 @@ function main()
     
     print(#nums)
     
-    local person = {}
+    local person:table = {}
     person["name"] = "Alice"
     person["age"] = 30
     
