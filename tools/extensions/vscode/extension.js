@@ -115,6 +115,7 @@ const MODULE_METHODS = {
 const KEYWORDS_CONTROL = ['if','then','else','elseif','end','for','while','do','repeat','until','return','break','continue','and','or','not'];
 const KEYWORDS_DECL    = ['local','const','global','function','type','extern','export','import','enum','defer','in','comptime','module'];
 const KEYWORDS_MEM     = ['alloc','free','alloc_typed','stack_alloc','deref','store','addr','cast','ptr_cast','panic','typeof','sizeof'];
+const KEYWORDS_ASM     = ['asm','volatile'];
 const CONSTANTS        = ['null','true','false'];
 const TYPES            = ['int','int8','int16','int32','int64','uint8','uint16','uint32','uint64','number','float','double','string','bool','void','any','ptr','char','byte','table'];
 
@@ -163,22 +164,6 @@ function getCompilerPath() {
     return 'sarnc.exe';
 }
 
-function getSarnExePath() {
-    const cfg = vscode.workspace.getConfiguration('sarn');
-    const val = cfg.get('sarnExePath', '').trim();
-    if (val) return val;
-    const folders = vscode.workspace.workspaceFolders;
-    if (folders) {
-        // check for PyInstaller build or plain .exe
-        for (const f of folders) {
-            for (const name of ['sarn.exe', 'dist\\sarn.exe']) {
-                const p = path.join(f.uri.fsPath, name);
-                try { fs.accessSync(p); return p; } catch {}
-            }
-        }
-    }
-    return 'sarn.exe';  // assume it's in PATH
-}
 function getProjectRoot() {
     const cfg = vscode.workspace.getConfiguration('sarn');
     const val = cfg.get('sarnRoot', '').trim();
@@ -214,7 +199,8 @@ function applyThemeCustomizations() {
         rule('keyword.control.sarn',                    'controlKeywords'),
         rule(['keyword.declaration.sarn',
               'keyword.declaration.function.sarn'],     'declKeywords'),
-        rule('keyword.operator.memory.sarn',            'memoryKeywords'),
+                rule(['keyword.operator.memory.sarn',
+              'keyword.operator.assembly.sarn'],       'memoryKeywords'),
         rule('storage.type.primitive.sarn',             'types'),
         rule('constant.language.sarn',                  'constants'),
         rule(['support.class.module.sarn',
@@ -619,7 +605,7 @@ class sarnCompletionProvider {
         }
 
         const items = [];
-        for (const kw of [...KEYWORDS_CONTROL, ...KEYWORDS_DECL, ...KEYWORDS_MEM])
+        for (const kw of [...KEYWORDS_CONTROL, ...KEYWORDS_DECL, ...KEYWORDS_MEM, ...KEYWORDS_ASM])
             items.push(new vscode.CompletionItem(kw, vscode.CompletionItemKind.Keyword));
         for (const c of CONSTANTS)
             items.push(new vscode.CompletionItem(c, vscode.CompletionItemKind.Constant));
@@ -653,6 +639,16 @@ class sarnCompletionProvider {
         addSymbols(/\bfunction\s+([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)?)/g, vscode.CompletionItemKind.Function);
         addSymbols(/\btype\s+([a-zA-Z_]\w*)/g,    vscode.CompletionItemKind.Class);
         addSymbols(/\benum\s+([a-zA-Z_]\w*)/g,    vscode.CompletionItemKind.Enum);
+
+        for (const match of text.matchAll(/\bfunction\s+[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)?\s*\(([^)]*)\)/g)) {
+            for (const parameter of match[1].split(',')) {
+                const name = parameter.trim().match(/^([a-zA-Z_]\w*)/);
+                if (name && !seen.has(name[1])) {
+                    items.push(new vscode.CompletionItem(name[1], vscode.CompletionItemKind.Variable));
+                    seen.add(name[1]);
+                }
+            }
+        }
         return items;
     }
 }
@@ -733,12 +729,12 @@ function cmdRunFile() {
     }
     editor.document.save().then(() => {
         const root    = getProjectRoot();
-        const sarnExe = getSarnExePath();
+        const compiler = getCompilerPath();
         const file    = editor.document.uri.fsPath;
         let t = vscode.window.terminals.find(x => x.name === 'Sarn');
         if (!t) t = vscode.window.createTerminal({ name: 'Sarn', cwd: root });
         t.show(true);
-        t.sendText(`& "${sarnExe}" run "${file}"`, true);
+        t.sendText(`& "${compiler}" "${file}"`, true);
     });
 }
 
@@ -844,7 +840,7 @@ function activate(context) {
     // Language features (work even when file shows as 'lua' before extension installs)
     const selector = [{ language:'sarn' }, { scheme:'file', pattern:'**/*.sarn' }];
     context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(selector, new sarnCompletionProvider(), '.', ':')
+        vscode.languages.registerCompletionItemProvider(selector, new sarnCompletionProvider())
     );
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(selector, new sarnHoverProvider())
