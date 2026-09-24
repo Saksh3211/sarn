@@ -1,0 +1,89 @@
+--!!type:strict
+--!!mem:man
+
+local gpu:table = import(GPU_compute)
+--[[
+    To import a package you must explicitly do import(pkg_name) , 
+    as we know a package or stdlib or module is treated as table .
+    
+    The import function looks for the package named "GPU_compute" in
+    the ".packages" folder.
+
+    you can download the current package from "https://github.com/Saksh3211/GPU_compute"
+    or execute one of these commands:
+     1. sarnc install GPU_compute
+     2. sarnc install https://github.com/Saksh3211/GPU_compute
+]]
+function main(): int
+    local vector_a: ptr<float> = alloc_typed(float, 4)
+    local vector_b: ptr<float> = alloc_typed(float, 4)
+    local vector_out: ptr<float> = alloc_typed(float, 4)
+    local matrix_a: ptr<float> = alloc_typed(float, 6)
+    local matrix_b: ptr<float> = alloc_typed(float, 6)
+    local matrix_out: ptr<float> = alloc_typed(float, 4)
+    local result: float = 0.0
+    local failures: int = 0
+    local raw_buffer: int = 0
+
+    if vector_a == null or vector_b == null or vector_out == null or matrix_a == null or matrix_b == null or matrix_out == null then
+        panic("GPU math test allocation failed")
+    end
+    if gpu.init() ~= 0 then
+        print("GPU init failed")
+        print(gpu.last_error())
+        return 1
+    end
+
+    print("GPU TEST 2: vector and matrix math")
+    print("device: " .. gpu.device_name())
+    print("byte allocation: 10 elements x 12 bytes = " .. gpu.buffer_bytes(10, 12) .. " bytes")
+    raw_buffer = gpu.buffer_create_elements(10, 12)
+    if raw_buffer < 0 then
+        print("custom byte allocation failed: " .. gpu.last_error())
+        return 1
+    end
+    gpu.buffer_free(raw_buffer)
+
+    if gpu.matrix_init_f32(cast(int, vector_a), 1, 4, 6.0) ~= 0 or gpu.matrix_init_f32(cast(int, vector_b), 1, 4, 2.0) ~= 0 then
+        print("vector initialization failed: " .. gpu.last_error())
+        return 1
+    end
+
+    gpu.vector_add_f32(cast(int, vector_a), cast(int, vector_b), cast(int, vector_out), 4)
+    result = gpu.sum_f32(cast(int, vector_out), 4)
+    print("vector add:      sum = " .. result .. " expected = 32")
+    if result ~= 32.0 then failures = failures + 1 end
+
+    gpu.vector_sub_f32(cast(int, vector_a), cast(int, vector_b), cast(int, vector_out), 4)
+    result = gpu.sum_f32(cast(int, vector_out), 4)
+    print("vector subtract: sum = " .. result .. " expected = 16")
+    if result ~= 16.0 then failures = failures + 1 end
+
+    gpu.vector_mul_f32(cast(int, vector_a), cast(int, vector_b), cast(int, vector_out), 4)
+    result = gpu.sum_f32(cast(int, vector_out), 4)
+    print("vector multiply: sum = " .. result .. " expected = 48")
+    if result ~= 48.0 then failures = failures + 1 end
+
+    gpu.vector_div_f32(cast(int, vector_a), cast(int, vector_b), cast(int, vector_out), 4)
+    result = gpu.sum_f32(cast(int, vector_out), 4)
+    print("vector divide:   sum = " .. result .. " expected = 12")
+    if result ~= 12.0 then failures = failures + 1 end
+
+    if gpu.matrix_init_f32(cast(int, matrix_a), 2, 3, 2.0) ~= 0 or gpu.matrix_init_f32(cast(int, matrix_b), 3, 2, 3.0) ~= 0 or gpu.matrix_multiply_f32(cast(int, matrix_a), cast(int, matrix_b), cast(int, matrix_out), 2, 3, 2) ~= 0 then
+        print("matrix operation failed: " .. gpu.last_error())
+        return 1
+    end
+    result = gpu.sum_f32(cast(int, matrix_out), 4)
+    print("matrix 2x3 * 3x2: sum = " .. result .. " expected = 72")
+    if result ~= 72.0 then failures = failures + 1 end
+
+    print("math test failures: " .. failures)
+    gpu.shutdown()
+    free(vector_a)
+    free(vector_b)
+    free(vector_out)
+    free(matrix_a)
+    free(matrix_b)
+    free(matrix_out)
+    return failures
+end

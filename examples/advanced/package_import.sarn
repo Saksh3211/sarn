@@ -1,0 +1,29 @@
+--!!type:strict
+
+local test:table = import(Slua_pkg_TEST)
+--[[
+    To import a package you must explicitly do import(pkg_name) , 
+    as we know a package or stdlib or module is treated as table .
+    
+    The import function looks for the package named "Sarn_pkg_TEST" in
+    the ".packages" folder.
+
+    you can download the current package from "https://github.com/Saksh3211/Slua_Pkg_TEST"
+    or execute one of these commands:
+     1. sarnc install Sarn_pkg_TEST
+     2. sarnc install https://github.com/Saksh3211/Slua_Pkg_TEST
+]]
+function main(): int
+    local sum: int = test.add(20, 22)
+    local product: int = test.mul(6, 7)
+    local difference: int = test.sub(product, sum)
+    local quotient: number = test.div(84.0, 2.0)
+    local power: int = test.pow(2, 8)
+
+    print("test.add: " .. sum)
+    print("test.mul: " .. product)
+    print("test.sub: " .. difference)
+    print("test.div: " .. quotient)
+    print("test.pow: " .. power)
+    return 0
+end

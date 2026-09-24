@@ -1,0 +1,13 @@
+--!!type:strict
+
+function main(): int
+    local input: int = 41
+    local output: int = *asm("mov $0, $1", "=r,r", input)
+    *asm("", "~{memory}")
+
+    print("input =")
+    print(input)
+    print("output =")
+    print(output)
+    return 0
+end

@@ -1,0 +1,33 @@
+--!!type:strict
+
+local gpu:table = import(GPU_compute)
+--[[
+    To import a package you must explicitly do import(pkg_name) , 
+    as we know a package or stdlib or module is treated as table .
+    
+    The import function looks for the package named "GPU_compute" in
+    the ".packages" folder.
+
+    you can download the current package from "https://github.com/Saksh3211/GPU_compute"
+    or execute one of these commands:
+     1. sarnc install GPU_compute
+     2. sarnc install https://github.com/Saksh3211/GPU_compute
+]]
+function main(): int
+    if gpu.available() == 0 then
+        print("OpenCL runtime not found")
+        print(gpu.last_error())
+        return 1
+    end
+
+    if gpu.init() ~= 0 then
+        print("GPU init failed")
+        print(gpu.last_error())
+        return 1
+    end
+
+    print("GPU: " .. gpu.device_name())
+    print("GPU initialized")
+    gpu.shutdown()
+    return 0
+end

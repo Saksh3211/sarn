@@ -1,0 +1,90 @@
+--!!type:strict
+--!!mem:man
+
+local gpu:table = import(GPU_compute)
+--[[
+    To import a package you must explicitly do import(pkg_name) , 
+    as we know a package or stdlib or module is treated as table .
+    
+    The import function looks for the package named "GPU_compute" in
+    the ".packages" folder.
+
+    you can download the current package from "https://github.com/Saksh3211/GPU_compute"
+    or execute one of these commands:
+     1. sarnc install GPU_compute
+     2. sarnc install https://github.com/Saksh3211/GPU_compute
+]]
+function main(): int
+    local width: int = 1024
+    local height: int = 1024
+    local pixels: int = width * height
+    local bytes: int = pixels * 8
+    local output: ptr<int> = alloc_typed(int, pixels)
+    local source: string = "__kernel void mandelbrot(__global long* out, int width, int height, int max_iter) {
+                                int x = get_global_id(0);
+                                int y = get_global_id(1); 
+                                int index = y * width + x; 
+                                float cx = ((float)x / (float)width) * 3.5f - 2.5f; 
+                                float cy = ((float)y / (float)height) * 2.0f - 1.0f; 
+                                float zx = 0.0f; float zy = 0.0f; 
+                                int i = 0; 
+                                while (zx * zx + zy * zy <= 4.0f && i < max_iter) { 
+                                    float next_x = zx * zx - zy * zy + cx; zy = 2.0f * zx * zy + cy; 
+                                    zx = next_x; i++; 
+                                } 
+                                out[index] = i; 
+                            }"
+    local buffer: int = 0
+    local program: int = 0
+    local kernel: int = 0
+    local checksum: int = 0
+    local minimum: int = 0
+    local maximum: int = 0
+
+    if output == null then panic("Mandelbrot output allocation failed") end
+    if gpu.init() ~= 0 then
+        print("GPU init failed")
+        print(gpu.last_error())
+        return 1
+    end
+
+    print("GPU capability showcase: 1,048,576-pixel Mandelbrot fractal")
+    print("device: " .. gpu.device_name())
+    print("kernel: custom OpenCL + float complex iteration")
+    buffer = gpu.buffer_create(bytes)
+    program = gpu.program_create(source)
+    kernel = gpu.kernel_create(program, "mandelbrot")
+    if buffer < 0 or program < 0 or kernel < 0 then
+        print("GPU resource creation failed")
+        print(gpu.last_error())
+        return 1
+    end
+    gpu.kernel_set_buffer(kernel, 0, buffer)
+    gpu.kernel_set_i32(kernel, 1, width)
+    gpu.kernel_set_i32(kernel, 2, height)
+    gpu.kernel_set_i32(kernel, 3, 512)
+    if gpu.kernel_launch_2d(kernel, width, height) ~= 0 or gpu.finish() ~= 0 then
+        print("2D Mandelbrot kernel failed")
+        print(gpu.last_error())
+        return 1
+    end
+    if gpu.buffer_read(buffer, cast(int, output), bytes) ~= 0 then
+        print("GPU readback failed")
+        print(gpu.last_error())
+        return 1
+    end
+    checksum = gpu.checksum_i64(cast(int, output), pixels)
+    minimum = gpu.min_i64(cast(int, output), pixels)
+    maximum = gpu.max_i64(cast(int, output), pixels)
+    print("pixels computed on GPU: " .. pixels)
+    print("iterations: 512")
+    print("iteration range: " .. minimum .. " .. " .. maximum)
+    print("fractal checksum: " .. checksum)
+    print("GPU proof: custom kernel executed, synchronized, and read back")
+    gpu.kernel_free(kernel)
+    gpu.program_free(program)
+    gpu.buffer_free(buffer)
+    gpu.shutdown()
+    free(output)
+    return 0
+end
